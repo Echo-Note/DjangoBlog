@@ -1,25 +1,40 @@
 repos:
+  # 1️⃣ 基础代码检查（空格、文件末尾、yaml、文件大小等）
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
+        args: ["--maxkb=500"]  # 限制单文件大小，避免误加大文件
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
+  # 2️⃣ Ruff（Lint + Fix + Format）
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.12.8
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+        name: ruff-lint
+        args:
+          [
+            --fix,  # 自动修复能修的
+            --exit-non-zero-on-fix,  # 修复后退出非 0 阻止提交，提示你重新 git add
+          ]
       - id: ruff-format
+        name: ruff-format  # 等同 black + isort
+        args: [--check]  # 只检查格式，不自动修（可改成 --check --diff）
 
-  #  - repo: https://github.com/psf/black-pre-commit-mirror
-  #    rev: 25.1.0
+  # 3️⃣ Python 安全扫描（Bandit）
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        args: ["-ll"]  # 高等级安全检查
+        exclude: "tests"  # 不扫描测试目录
+
+  # 4️⃣ 检查依赖安全漏洞（pip-audit）
+  #  - repo: https://github.com/pypa/pip-audit
+  #    rev: v2.9.0
   #    hooks:
-  #      - id: black
-  #
-  #  - repo: https://github.com/pycqa/isort
-  #    rev: 6.0.1
-  #    hooks:
-  #      - id: isort
+  #      - id: pip-audit
+  #        args: ["-r", "requirements.txt"]

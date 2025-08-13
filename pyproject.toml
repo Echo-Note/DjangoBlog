@@ -77,4 +77,5 @@ dependencies = [
 
 dev = [
     "pre-commit>=4.3.0",
+    "pip-audit>=2.9.0",
 ]
