@@ -48,25 +48,25 @@ class DjangoBlogAdminSite(AdminSite):
 
 admin_site = DjangoBlogAdminSite(name="admin")
 
-admin_site.register(Article, ArticleAdmin)
-admin_site.register(Category, CategoryAdmin)
-admin_site.register(Tag, TagAdmin)
-admin_site.register(Links, LinksAdmin)
-admin_site.register(SideBar, SideBarAdmin)
-admin_site.register(BlogSettings, BlogSettingsAdmin)
+# 批量注册模型和对应的Admin类
+registrations = [
+    (Article, ArticleAdmin),
+    (Category, CategoryAdmin),
+    (Tag, TagAdmin),
+    (Links, LinksAdmin),
+    (SideBar, SideBarAdmin),
+    (BlogSettings, BlogSettingsAdmin),
+    (commands, CommandsAdmin),
+    (EmailSendLog, EmailSendLogAdmin),
+    (BlogUser, BlogUserAdmin),
+    (Comment, CommentAdmin),
+    (OAuthUser, OAuthUserAdmin),
+    (OAuthConfig, OAuthConfigAdmin),
+    (OwnTrackLog, OwnTrackLogsAdmin),
+    (Site, SiteAdmin),
+    (LogEntry, LogEntryAdmin),
+]
 
-admin_site.register(commands, CommandsAdmin)
-admin_site.register(EmailSendLog, EmailSendLogAdmin)
-
-admin_site.register(BlogUser, BlogUserAdmin)
-
-admin_site.register(Comment, CommentAdmin)
-
-admin_site.register(OAuthUser, OAuthUserAdmin)
-admin_site.register(OAuthConfig, OAuthConfigAdmin)
-
-admin_site.register(OwnTrackLog, OwnTrackLogsAdmin)
-
-admin_site.register(Site, SiteAdmin)
-
-admin_site.register(LogEntry, LogEntryAdmin)
+# 批量注册所有模型
+for model, admin_class in registrations:
+    admin_site.register(model, admin_class)
