@@ -48,7 +48,21 @@
 
     <div class="entry-content" itemprop="articleBody">
         {% if  isindex %}
-            {{ article.body|custom_markdown|escape|truncatechars_content }}
+            {% if not article.summary %}
+                <div class="summary-box">
+                    <div class="summary-title">内容预览</div>
+                    <div>
+                        {{ article.body|custom_markdown|escape|truncatechars_content }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="summary-box">
+                    <div class="summary-title">摘要</div>
+                    <div>
+                        {{ article.summary|custom_markdown|escape|truncatechars_content }}
+                    </div>
+                </div>
+            {% endif %}
             <p class='read-more'><a
                     href=' {{ article.get_absolute_url }}'>Read more</a></p>
         {% else %}
@@ -61,7 +75,14 @@
                 <hr class="break_line"/>
             {% endif %}
             <div class="article">
-
+                {% if article.summary %}
+                <div class="summary-box">
+                    <div class="summary-title">摘要</div>
+                    <div>
+                        {{ article.summary|custom_markdown|escape }}
+                    </div>
+                </div>
+                {% endif %}
                 {{ article.body|custom_markdown|escape }}
 
             </div>

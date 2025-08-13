@@ -92,6 +92,14 @@ class Article(BaseModel):
     title = models.CharField(
         _("title"), max_length=200, unique=True, db_comment="文章标题，要求唯一"
     )
+    # 摘要
+    summary = models.CharField(
+        _("summary"),
+        max_length=500,
+        blank=True,
+        null=True,
+        db_comment="文章摘要，可为空",
+    )
     body = MDTextField(_("body"), db_comment="文章正文（Markdown）")
     pub_time = models.DateTimeField(
         _("publish time"), blank=False, null=False, default=now, db_comment="发布时间"
