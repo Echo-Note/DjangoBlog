@@ -86,7 +86,7 @@ class ArticlelAdmin(admin.ModelAdmin):
     """
     文章管理类，配置Django Admin界面的展示和交互逻辑。
 
-    属性:
+    属性：
         list_per_page (int): 每页显示20条记录
         search_fields (tuple): 可搜索字段（正文、标题）
         list_display (tuple): 列表页展示字段
@@ -128,10 +128,10 @@ class ArticlelAdmin(admin.ModelAdmin):
         """
         生成指向分类编辑页面的超链接。
 
-        参数:
+        参数：
             obj (Article): 当前文章对象
 
-        返回:
+        返回：
             str: 格式化后的HTML链接
         """
         info = (obj.category._meta.app_label, obj.category._meta.model_name)
@@ -142,41 +142,47 @@ class ArticlelAdmin(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         """
-        获取表单实例并限制作者选择范围。
+        获取表单实例并限制作者选择范围，设置默认作者为当前登录用户。
 
-        参数:
+        参数：
             request (HttpRequest): 当前请求对象
             obj (Article, optional): 当前编辑的文章对象
 
-        返回:
+        返回：
             ModelForm: 过滤后的表单实例
         """
         form = super(ArticlelAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields["author"].queryset = get_user_model().objects.filter(
             is_superuser=True
         )
+        # 设置默认作者为当前登录用户
+        if not obj:  # 只在创建新文章时设置默认值
+            form.base_fields["author"].initial = request.user
         return form
 
     def save_model(self, request, obj, form, change):
         """
-        保存模型时的额外处理。
+        保存模型时的额外处理，确保新文章的作者为当前登录用户。
 
-        参数:
+        参数：
             request (HttpRequest): 当前请求对象
             obj (Article): 要保存的文章对象
             form (ModelForm): 当前使用的表单
             change (bool): 是否为修改操作
         """
+        # 如果是新建文章且没有设置作者，则设置为当前登录用户
+        if not change and not obj.author:
+            obj.author = request.user
         super(ArticlelAdmin, self).save_model(request, obj, form, change)
 
     def get_view_on_site_url(self, obj=None):
         """
         获取文章在站点的访问URL。
 
-        参数:
+        参数：
             obj (Article, optional): 当前文章对象
 
-        返回:
+        返回：
             str: 文章的完整URL或站点域名
         """
         if obj:
@@ -193,7 +199,7 @@ class TagAdmin(admin.ModelAdmin):
     """
     标签管理类，排除自动生成的字段。
 
-    排除字段:
+    排除字段：
         - slug: 自动生成的URL别名
         - last_modify_time: 最后修改时间
         - creation_time: 创建时间
@@ -206,12 +212,12 @@ class CategoryAdmin(admin.ModelAdmin):
     """
     分类管理类，配置列表展示和字段排除。
 
-    列表展示:
+    列表展示：
         - name: 分类名称
         - parent_category: 父分类
         - index: 排序索引
 
-    排除字段:
+    排除字段：
         - slug: 自动生成的URL别名
         - last_modify_time: 最后修改时间
         - creation_time: 创建时间
@@ -225,7 +231,7 @@ class LinksAdmin(admin.ModelAdmin):
     """
     友情链接管理类，排除自动生成的时间字段。
 
-    排除字段:
+    排除字段：
         - last_mod_time: 最后修改时间
         - creation_time: 创建时间
     """
@@ -237,13 +243,13 @@ class SideBarAdmin(admin.ModelAdmin):
     """
     侧边栏管理类，配置列表展示和字段排除。
 
-    列表展示:
+    列表展示：
         - name: 侧边栏名称
         - content: 内容
         - is_enable: 是否启用
         - sequence: 排序序号
 
-    排除字段:
+    排除字段：
         - last_mod_time: 最后修改时间
         - creation_time: 创建时间
     """
