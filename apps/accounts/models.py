@@ -10,19 +10,33 @@ from djangoblog.utils import get_current_site
 
 
 class BlogUser(AbstractUser):
-    nickname = models.CharField(_("nick name"), max_length=100, blank=True)
-    creation_time = models.DateTimeField(_("creation time"), default=now)
-    last_modify_time = models.DateTimeField(_("last modify time"), default=now)
-    source = models.CharField(_("create source"), max_length=100, blank=True)
+    """站内用户模型，继承自 Django AbstractUser。"""
 
-    def get_absolute_url(self):
+    nickname = models.CharField(
+        _("nick name"), max_length=100, blank=True, db_comment="用户昵称，可为空"
+    )
+    creation_time = models.DateTimeField(
+        _("creation time"), default=now, db_comment="创建时间"
+    )
+    last_modify_time = models.DateTimeField(
+        _("last modify time"), default=now, db_comment="最后修改时间"
+    )
+    source = models.CharField(
+        _("create source"),
+        max_length=100,
+        blank=True,
+        db_comment="用户创建来源，如注册/导入/第三方绑定",
+    )
+
+    def get_absolute_url(self) -> str:
         """获取用户详细信息视图的url。"""
         return reverse("blog:author_detail", kwargs={"author_name": self.username})
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """返回邮箱作为显示名称。"""
         return self.email
 
-    def get_full_url(self):
+    def get_full_url(self) -> str:
         """
         获取用户详细信息页面的完整URL。
 
