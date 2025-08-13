@@ -19,7 +19,8 @@ def send_verify_email(to_mail: str, code: str, subject: str = _("Verify Email"))
     """
     html_content = _(
         "You are resetting the password, the verification code is：%(code)s, valid within 5 minutes, please keep it "
-        "properly") % {'code': code}
+        "properly"
+    ) % {"code": code}
     send_email([to_mail], subject, html_content)
 
 

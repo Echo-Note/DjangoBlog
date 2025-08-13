@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.forms import UsernameField
+from django.contrib.auth.forms import UserChangeForm, UsernameField
 from django.utils.translation import gettext_lazy as _
 
 # Register your models here.
@@ -9,12 +8,14 @@ from .models import BlogUser
 
 
 class BlogUserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(label=_('password'), widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_('Enter password again'), widget=forms.PasswordInput)
+    password1 = forms.CharField(label=_("password"), widget=forms.PasswordInput)
+    password2 = forms.CharField(
+        label=_("Enter password again"), widget=forms.PasswordInput
+    )
 
     class Meta:
         model = BlogUser
-        fields = ('email',)
+        fields = ("email",)
 
     def clean_password2(self):
         """
@@ -36,20 +37,20 @@ class BlogUserCreationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
-            user.source = 'adminsite'
+            user.source = "adminsite"
             user.save()
         return user
 
 
 class BlogUserChangeForm(UserChangeForm):
-
     class Meta:
         """
         指定模型和字段
         """
+
         model = BlogUser
-        fields = '__all__'
-        field_classes = {'username': UsernameField}
+        fields = "__all__"
+        field_classes = {"username": UsernameField}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -59,12 +60,13 @@ class BlogUserAdmin(UserAdmin):
     form = BlogUserChangeForm
     add_form = BlogUserCreationForm
     list_display = (
-        'id',
-        'nickname',
-        'username',
-        'email',
-        'last_login',
-        'date_joined',
-        'source')
-    list_display_links = ('id', 'username')
-    ordering = ('-id',)
+        "id",
+        "nickname",
+        "username",
+        "email",
+        "last_login",
+        "date_joined",
+        "source",
+    )
+    list_display_links = ("id", "username")
+    ordering = ("-id",)

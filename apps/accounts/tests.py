@@ -1,40 +1,39 @@
 from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import BlogUser
 from apps.blog.models import Article, Category
-from djangoblog.utils import *
+from djangoblog.utils import *  # noqa: F403
+
 from . import utils
 
-
 # Create your tests here.
+
 
 class AccountTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.factory = RequestFactory()
         self.blog_user = BlogUser.objects.create_user(
-            username="test",
-            email="admin@admin.com",
-            password="12345678"
+            username="test", email="admin@admin.com", password="12345678"
         )
         self.new_test = "xxx123--="
 
     def test_validate_account(self):
-        site = get_current_site().domain
+        site = get_current_site().domain  # noqa: F405,F841
         user = BlogUser.objects.create_superuser(
             email="liangliangyy1@gmail.com",
             username="liangliangyy1",
-            password="qwer!@#$ggg")
-        testuser = BlogUser.objects.get(username='liangliangyy1')
+            password="qwer!@#$ggg",
+        )
+        testuser = BlogUser.objects.get(username="liangliangyy1")  # noqa: F841
 
         loginresult = self.client.login(
-            username='liangliangyy1',
-            password='qwer!@#$ggg')
+            username="liangliangyy1", password="qwer!@#$ggg"
+        )
         self.assertEqual(loginresult, True)
-        response = self.client.get('/admin/')
+        response = self.client.get("/admin/")
         self.assertEqual(response.status_code, 200)
 
         category = Category()
@@ -48,42 +47,40 @@ class AccountTest(TestCase):
         article.body = "nicecontentaaa"
         article.author = user
         article.category = category
-        article.type = 'a'
-        article.status = 'p'
+        article.type = "a"
+        article.status = "p"
         article.save()
 
         response = self.client.get(article.get_admin_url())
         self.assertEqual(response.status_code, 200)
 
     def test_validate_register(self):
-        self.assertEquals(
-            0, len(
-                BlogUser.objects.filter(
-                    email='user123@user.com')))
-        response = self.client.post(reverse('account:register'), {
-            'username': 'user1233',
-            'email': 'user123@user.com',
-            'password1': 'password123!q@wE#R$T',
-            'password2': 'password123!q@wE#R$T',
-        })
-        self.assertEquals(
-            1, len(
-                BlogUser.objects.filter(
-                    email='user123@user.com')))
-        user = BlogUser.objects.filter(email='user123@user.com')[0]
-        sign = get_sha256(get_sha256(settings.SECRET_KEY + str(user.id)))
-        path = reverse('accounts:result')
-        url = '{path}?type=validation&id={id}&sign={sign}'.format(
-            path=path, id=user.id, sign=sign)
+        self.assertEquals(0, len(BlogUser.objects.filter(email="user123@user.com")))
+        response = self.client.post(
+            reverse("account:register"),
+            {
+                "username": "user1233",
+                "email": "user123@user.com",
+                "password1": "password123!q@wE#R$T",
+                "password2": "password123!q@wE#R$T",
+            },
+        )
+        self.assertEquals(1, len(BlogUser.objects.filter(email="user123@user.com")))
+        user = BlogUser.objects.filter(email="user123@user.com")[0]
+        sign = get_sha256(get_sha256(settings.SECRET_KEY + str(user.id)))  # noqa: F405
+        path = reverse("accounts:result")
+        url = "{path}?type=validation&id={id}&sign={sign}".format(
+            path=path, id=user.id, sign=sign
+        )
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-        self.client.login(username='user1233', password='password123!q@wE#R$T')
-        user = BlogUser.objects.filter(email='user123@user.com')[0]
+        self.client.login(username="user1233", password="password123!q@wE#R$T")
+        user = BlogUser.objects.filter(email="user123@user.com")[0]
         user.is_superuser = True
         user.is_staff = True
         user.save()
-        delete_sidebar_cache()
+        delete_sidebar_cache()  # noqa: F405
         category = Category()
         category.name = "categoryaaa"
         category.creation_time = timezone.now()
@@ -96,23 +93,23 @@ class AccountTest(TestCase):
         article.body = "nicecontentttt"
         article.author = user
 
-        article.type = 'a'
-        article.status = 'p'
+        article.type = "a"
+        article.status = "p"
         article.save()
 
         response = self.client.get(article.get_admin_url())
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.get(reverse('account:logout'))
+        response = self.client.get(reverse("account:logout"))
         self.assertIn(response.status_code, [301, 302, 200])
 
         response = self.client.get(article.get_admin_url())
         self.assertIn(response.status_code, [301, 302, 200])
 
-        response = self.client.post(reverse('account:login'), {
-            'username': 'user1233',
-            'password': 'password123'
-        })
+        response = self.client.post(
+            reverse("account:login"),
+            {"username": "user1233", "password": "password123"},
+        )
         self.assertIn(response.status_code, [301, 302, 200])
 
         response = self.client.get(article.get_admin_url())
@@ -120,7 +117,7 @@ class AccountTest(TestCase):
 
     def test_verify_email_code(self):
         to_email = "admin@admin.com"
-        code = generate_code()
+        code = generate_code()  # noqa: F405
         utils.set_code(to_email, code)
         utils.send_verify_email(to_email, code)
 
@@ -133,7 +130,7 @@ class AccountTest(TestCase):
     def test_forget_password_email_code_success(self):
         resp = self.client.post(
             path=reverse("account:forget_password_code"),
-            data=dict(email="admin@admin.com")
+            data=dict(email="admin@admin.com"),
         )
 
         self.assertEqual(resp.status_code, 200)
@@ -141,19 +138,17 @@ class AccountTest(TestCase):
 
     def test_forget_password_email_code_fail(self):
         resp = self.client.post(
-            path=reverse("account:forget_password_code"),
-            data=dict()
+            path=reverse("account:forget_password_code"), data=dict()
         )
         self.assertEqual(resp.content.decode("utf-8"), "错误的邮箱")
 
         resp = self.client.post(
-            path=reverse("account:forget_password_code"),
-            data=dict(email="admin@com")
+            path=reverse("account:forget_password_code"), data=dict(email="admin@com")
         )
         self.assertEqual(resp.content.decode("utf-8"), "错误的邮箱")
 
     def test_forget_password_email_success(self):
-        code = generate_code()
+        code = generate_code()  # noqa: F405
         utils.set_code(self.blog_user.email, code)
         data = dict(
             new_password1=self.new_test,
@@ -161,10 +156,7 @@ class AccountTest(TestCase):
             email=self.blog_user.email,
             code=code,
         )
-        resp = self.client.post(
-            path=reverse("account:forget_password"),
-            data=data
-        )
+        resp = self.client.post(path=reverse("account:forget_password"), data=data)
         self.assertEqual(resp.status_code, 302)
 
         # 验证用户密码是否修改成功
@@ -181,16 +173,12 @@ class AccountTest(TestCase):
             email="123@123.com",
             code="123456",
         )
-        resp = self.client.post(
-            path=reverse("account:forget_password"),
-            data=data
-        )
+        resp = self.client.post(path=reverse("account:forget_password"), data=data)
 
         self.assertEqual(resp.status_code, 200)
 
-
     def test_forget_password_email_code_error(self):
-        code = generate_code()
+        code = generate_code()  # noqa: F405
         utils.set_code(self.blog_user.email, code)
         data = dict(
             new_password1=self.new_test,
@@ -198,10 +186,6 @@ class AccountTest(TestCase):
             email=self.blog_user.email,
             code="111111",
         )
-        resp = self.client.post(
-            path=reverse("account:forget_password"),
-            data=data
-        )
+        resp = self.client.post(path=reverse("account:forget_password"), data=data)
 
         self.assertEqual(resp.status_code, 200)
-
