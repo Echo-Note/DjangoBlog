@@ -194,11 +194,11 @@ class TagAdmin(admin.ModelAdmin):
 
     排除字段:
         - slug: 自动生成的URL别名
-        - last_mod_time: 最后修改时间
+        - last_modify_time: 最后修改时间
         - creation_time: 创建时间
     """
 
-    exclude = ("slug", "last_mod_time", "creation_time")
+    exclude = ("slug", "last_modify_time", "creation_time")
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -212,12 +212,12 @@ class CategoryAdmin(admin.ModelAdmin):
 
     排除字段:
         - slug: 自动生成的URL别名
-        - last_mod_time: 最后修改时间
+        - last_modify_time: 最后修改时间
         - creation_time: 创建时间
     """
 
     list_display = ("name", "parent_category", "index")
-    exclude = ("slug", "last_mod_time", "creation_time")
+    exclude = ("slug", "last_modify_time", "creation_time")
 
 
 class LinksAdmin(admin.ModelAdmin):
