@@ -344,6 +344,16 @@ def page_not_found_view(
         request,
         exception,
         template_name='blog/error_page.html'):
+    """
+    404错误页面视图
+
+    找不到页面时，将记录异常并显示404错误页面。
+
+    : param request: 当前请求对象
+    : param exception: 导致404错误的异常
+    : param template_name: 404错误页面的模板名称
+    : return: 渲染的404错误页面
+    """
     if exception:
         logger.error(exception)
     url = request.get_full_path()
@@ -355,6 +365,15 @@ def page_not_found_view(
 
 
 def server_error_view(request, template_name='blog/error_page.html'):
+    """
+    500错误页面视图
+
+    服务器内部错误时，将记录异常并显示500错误页面。
+
+    : param request: 当前请求对象
+    : param template_name: 500错误页面的模板名称
+    : return: 渲染的500错误页面
+    """
     return render(request,
                   template_name,
                   {'message': _('Sorry, the server is busy, please click the home page to see other?'),
@@ -366,6 +385,16 @@ def permission_denied_view(
         request,
         exception,
         template_name='blog/error_page.html'):
+    """
+    403错误页面视图
+
+    没有权限访问页面时，将记录异常并显示403错误页面。
+
+    : param request: 当前请求对象
+    : param exception: 导致403错误的异常
+    : param template_name: 403错误页面的模板名称
+    : return: 渲染的403错误页面
+    """
     if exception:
         logger.error(exception)
     return render(
@@ -375,5 +404,14 @@ def permission_denied_view(
 
 
 def clean_cache_view(request):
+
+    """
+    清除缓存视图
+
+    该视图将清除所有缓存
+
+    :param request: 当前请求对象
+    :return: 一个"ok"的http response
+    """
     cache.clear()
     return HttpResponse('ok')
