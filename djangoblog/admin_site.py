@@ -3,18 +3,18 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.sites.admin import SiteAdmin
 from django.contrib.sites.models import Site
 
-from accounts.admin import *
-from blog.admin import *
-from blog.models import *
-from comments.admin import *
-from comments.models import *
+from apps.accounts.admin import *
+from apps.blog.admin import *
+from apps.blog.models import *
+from apps.comments.admin import *
+from apps.comments.models import *
 from djangoblog.logentryadmin import LogEntryAdmin
-from oauth.admin import *
-from oauth.models import *
-from owntracks.admin import *
-from owntracks.models import *
-from servermanager.admin import *
-from servermanager.models import *
+from apps.oauth.admin import *
+from apps.oauth.models import *
+from apps.owntracks.admin import *
+from apps.owntracks.models import *
+from apps.servermanager.admin import *
+from apps.servermanager.models import *
 
 
 class DjangoBlogAdminSite(AdminSite):

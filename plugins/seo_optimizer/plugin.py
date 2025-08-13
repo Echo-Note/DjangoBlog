@@ -3,7 +3,7 @@ from django.utils.html import strip_tags
 from django.template.defaultfilters import truncatewords
 from djangoblog.plugin_manage.base_plugin import BasePlugin
 from djangoblog.plugin_manage import hooks
-from blog.models import Article, Category, Tag
+from apps.blog.models import Article, Category, Tag
 from djangoblog.utils import get_blog_setting
 
 

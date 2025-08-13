@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_max_articleid_commentid():
-    from blog.models import Article
-    from comments.models import Comment
+    from apps.blog.models import Article
+    from apps.comments.models import Comment
     return (Article.objects.latest().pk, Comment.objects.latest().pk)
 
 
@@ -150,7 +150,7 @@ def get_blog_setting():
     if value:
         return value
     else:
-        from blog.models import BlogSettings
+        from apps.blog.models import BlogSettings
         if not BlogSettings.objects.count():
             setting = BlogSettings()
             setting.site_name = 'djangoblog'
@@ -202,7 +202,7 @@ def save_user_avatar(url):
 
 
 def delete_sidebar_cache():
-    from blog.models import LinkShowType
+    from apps.blog.models import LinkShowType
     keys = ["sidebar" + x for x in LinkShowType.values]
     for k in keys:
         logger.info('delete sidebar key:' + k)

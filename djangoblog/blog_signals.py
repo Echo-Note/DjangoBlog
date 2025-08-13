@@ -9,12 +9,12 @@ from django.core.mail import EmailMultiAlternatives
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from comments.models import Comment
-from comments.utils import send_comment_email
+from apps.comments.models import Comment
+from apps.comments.utils import send_comment_email
 from djangoblog.spider_notify import SpiderNotify
 from djangoblog.utils import cache, expire_view_cache, delete_sidebar_cache, delete_view_cache
 from djangoblog.utils import get_current_site
-from oauth.models import OAuthUser
+from apps.oauth.models import OAuthUser
 
 logger = logging.getLogger(__name__)
 

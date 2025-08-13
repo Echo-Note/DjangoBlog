@@ -3,7 +3,7 @@ from django.contrib.syndication.views import Feed
 from django.utils import timezone
 from django.utils.feedgenerator import Rss201rev2Feed
 
-from blog.models import Article
+from apps.blog.models import Article
 from djangoblog.utils import CommonMarkdown
 
 

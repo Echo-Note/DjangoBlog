@@ -54,12 +54,12 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'mdeditor',
     'haystack',
-    'blog',
-    'accounts',
-    'comments',
-    'oauth',
-    'servermanager',
-    'owntracks',
+    'apps.blog',
+    'apps.accounts',
+    'apps.comments',
+    'apps.oauth',
+    'apps.servermanager',
+    'apps.owntracks',
     'compressor',
     'djangoblog'
 ]
@@ -78,7 +78,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
-    'blog.middleware.OnlineMiddleware'
+    'apps.blog.middleware.OnlineMiddleware'
 ]
 
 ROOT_URLCONF = 'djangoblog.urls'
@@ -94,7 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'blog.context_processors.seo_processor'
+                'apps.blog.context_processors.seo_processor'
             ],
         },
     },
@@ -170,7 +170,7 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 # Allow user login with username and password
 AUTHENTICATION_BACKENDS = [
-    'accounts.user_login_backend.EmailOrUsernameModelBackend']
+    'apps.accounts.user_login_backend.EmailOrUsernameModelBackend']
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'collectedstatic')
 

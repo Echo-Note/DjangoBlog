@@ -5,8 +5,8 @@ from haystack.forms import ModelSearchForm
 from haystack.models import SearchResult
 from haystack.utils import log as logging
 
-from blog.documents import ArticleDocument, ArticleDocumentManager
-from blog.models import Article
+from apps.blog.documents import ArticleDocument, ArticleDocumentManager
+from apps.blog.models import Article
 
 logger = logging.getLogger(__name__)
 
