@@ -38,6 +38,11 @@ class LogEntryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
+    def get_readonly_fields(self, request, obj=None):
+        """将所有字段设为只读，确保后台只能查看，不能编辑。"""
+        # 使用模型元信息动态获取所有字段名，避免遗漏
+        return [f.name for f in LogEntry._meta.get_fields()]
+
     def object_link(self, obj):
         content_type = ContentType.objects.get_for_id(obj.content_type_id)
         object_link = obj.object_repr
