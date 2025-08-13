@@ -32,7 +32,7 @@ def makr_article_publish(modeladmin, request, queryset):
     """
     将选中的文章状态批量更新为已发布。
 
-    参数:
+    参数：
         modeladmin (ModelAdmin): 管理界面实例
         request (HttpRequest): 当前请求对象
         queryset (QuerySet): 被选中的文章集合
@@ -44,7 +44,7 @@ def draft_article(modeladmin, request, queryset):
     """
     将选中的文章状态批量更新为草稿。
 
-    参数:
+    参数：
         modeladmin (ModelAdmin): 管理界面实例
         request (HttpRequest): 当前请求对象
         queryset (QuerySet): 被选中的文章集合
@@ -56,7 +56,7 @@ def close_article_commentstatus(modeladmin, request, queryset):
     """
     关闭选中文章的评论功能。
 
-    参数:
+    参数：
         modeladmin (ModelAdmin): 管理界面实例
         request (HttpRequest): 当前请求对象
         queryset (QuerySet): 被选中的文章集合
@@ -68,7 +68,7 @@ def open_article_commentstatus(modeladmin, request, queryset):
     """
     开启选中文章的评论功能。
 
-    参数:
+    参数：
         modeladmin (ModelAdmin): 管理界面实例
         request (HttpRequest): 当前请求对象
         queryset (QuerySet): 被选中的文章集合
@@ -95,6 +95,7 @@ class ArticleAdmin(admin.ModelAdmin):
         exclude (tuple): 排除自动显示的字段
         view_on_site (bool): 是否显示“在站点查看”按钮
         actions (list): 可用的批量操作
+        fieldsets (tuple): 表单字段分组配置
     """
 
     list_per_page = 20
@@ -123,6 +124,57 @@ class ArticleAdmin(admin.ModelAdmin):
         open_article_commentstatus,
     ]
     readonly_fields = ("views", "creation_time", "last_modify_time")
+
+    # 表单字段分组配置，优化排版和用户体验
+    fieldsets = (
+        (
+            _("基本信息"),
+            {
+                "fields": ("title", "author", "category"),
+                "description": "文章的基本标识信息",
+            },
+        ),
+        (
+            _("内容编辑"),
+            {
+                "fields": ("body",),
+                "classes": ("wide",),
+                "description": "文章的主要内容",
+            },
+        ),
+        (
+            _("分类标签"),
+            {
+                "fields": ("tags",),
+                "classes": ("collapse",),
+                "description": "为文章添加相关标签",
+            },
+        ),
+        (
+            _("发布设置"),
+            {
+                "fields": ("status", "type", "comment_status", "pub_time"),
+                "classes": ("wide",),
+                "description": "控制文章的发布状态、类型和评论设置",
+            },
+        ),
+        (
+            _("高级选项"),
+            {
+                "fields": ("article_order", "show_toc"),
+                "classes": ("collapse",),
+                "description": "文章排序和目录显示等高级选项",
+            },
+        ),
+        (
+            _("统计信息"),
+            {
+                "fields": ("views", "creation_time", "last_modify_time"),
+                "classes": ("collapse",),
+                "description": "文章的访问统计和时间信息（只读）",
+            },
+        ),
+    )
 
     def link_to_category(self, obj):
         """
@@ -158,6 +210,7 @@ class ArticleAdmin(admin.ModelAdmin):
         # 设置默认作者为当前登录用户
         if not obj:  # 只在创建新文章时设置默认值
             form.base_fields["author"].initial = request.user
+            form.base_fields["article_order"].initial = Article.objects.count() + 1
         return form
 
     def save_model(self, request, obj, form, change):
