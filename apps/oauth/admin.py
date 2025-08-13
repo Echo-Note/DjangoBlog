@@ -6,9 +6,13 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
+from apps.oauth.models import OAuthConfig, OAuthUser
+from djangoblog.admin_site import admin_site
+
 logger = logging.getLogger(__name__)
 
 
+@admin.register(OAuthUser, site=admin_site)
 class OAuthUserAdmin(admin.ModelAdmin):
     search_fields = ("nickname", "email")
     list_per_page = 20
@@ -59,6 +63,7 @@ class OAuthUserAdmin(admin.ModelAdmin):
     show_user_image.short_description = "用户头像"
 
 
+@admin.register(OAuthConfig, site=admin_site)
 class OAuthConfigAdmin(admin.ModelAdmin):
     list_display = ("type", "appkey", "appsecret", "is_enable")
     list_filter = ("type",)

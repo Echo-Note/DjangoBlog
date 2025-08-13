@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UsernameField
 from django.utils.translation import gettext_lazy as _
+from django.contrib import admin
+
+from djangoblog.admin_site import admin_site
 
 # Register your models here.
 from .models import BlogUser
@@ -56,6 +59,7 @@ class BlogUserChangeForm(UserChangeForm):
         super().__init__(*args, **kwargs)
 
 
+@admin.register(BlogUser, site=admin_site)
 class BlogUserAdmin(UserAdmin):
     form = BlogUserChangeForm
     add_form = BlogUserCreationForm

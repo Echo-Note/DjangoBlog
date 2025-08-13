@@ -5,8 +5,10 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from djangoblog.admin_site import admin_site
+
 # Register your models here.
-from .models import Article
+from .models import Article, BlogSettings, Category, Links, SideBar, Tag
 
 
 class ArticleForm(forms.ModelForm):
@@ -82,6 +84,7 @@ close_article_commentstatus.short_description = _("Close article comments")
 open_article_commentstatus.short_description = _("Open article comments")
 
 
+@admin.register(Article, site=admin_site)
 class ArticleAdmin(admin.ModelAdmin):
     """
     文章管理类，配置Django Admin界面的展示和交互逻辑。
@@ -248,6 +251,7 @@ class ArticleAdmin(admin.ModelAdmin):
             return site
 
 
+@admin.register(Tag, site=admin_site)
 class TagAdmin(admin.ModelAdmin):
     """
     标签管理类，排除自动生成的字段。
@@ -261,6 +265,7 @@ class TagAdmin(admin.ModelAdmin):
     exclude = ("slug", "last_modify_time", "creation_time")
 
 
+@admin.register(Category, site=admin_site)
 class CategoryAdmin(admin.ModelAdmin):
     """
     分类管理类，配置列表展示和字段排除。
@@ -280,6 +285,7 @@ class CategoryAdmin(admin.ModelAdmin):
     exclude = ("slug", "last_modify_time", "creation_time")
 
 
+@admin.register(Links, site=admin_site)
 class LinksAdmin(admin.ModelAdmin):
     """
     友情链接管理类，排除自动生成的时间字段。
@@ -292,6 +298,7 @@ class LinksAdmin(admin.ModelAdmin):
     exclude = ("last_mod_time", "creation_time")
 
 
+@admin.register(SideBar, site=admin_site)
 class SideBarAdmin(admin.ModelAdmin):
     """
     侧边栏管理类，配置列表展示和字段排除。
@@ -311,6 +318,7 @@ class SideBarAdmin(admin.ModelAdmin):
     exclude = ("last_mod_time", "creation_time")
 
 
+@admin.register(BlogSettings, site=admin_site)
 class BlogSettingsAdmin(admin.ModelAdmin):
     """
     博客设置管理类，暂无特殊配置。

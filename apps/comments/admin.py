@@ -3,6 +3,9 @@ from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from apps.comments.models import Comment
+from djangoblog.admin_site import admin_site
+
 
 def disable_commentstatus(modeladmin, request, queryset):
     queryset.update(is_enable=False)
@@ -16,6 +19,7 @@ disable_commentstatus.short_description = _("Disable comments")
 enable_commentstatus.short_description = _("Enable comments")
 
 
+@admin.register(Comment, site=admin_site)
 class CommentAdmin(admin.ModelAdmin):
     list_per_page = 20
     list_display = (
