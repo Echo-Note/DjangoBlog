@@ -82,7 +82,7 @@ close_article_commentstatus.short_description = _("Close article comments")
 open_article_commentstatus.short_description = _("Open article comments")
 
 
-class ArticlelAdmin(admin.ModelAdmin):
+class ArticleAdmin(admin.ModelAdmin):
     """
     文章管理类，配置Django Admin界面的展示和交互逻辑。
 
@@ -151,7 +151,7 @@ class ArticlelAdmin(admin.ModelAdmin):
         返回：
             ModelForm: 过滤后的表单实例
         """
-        form = super(ArticlelAdmin, self).get_form(request, obj, **kwargs)
+        form = super(ArticleAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields["author"].queryset = get_user_model().objects.filter(
             is_superuser=True
         )
@@ -173,7 +173,7 @@ class ArticlelAdmin(admin.ModelAdmin):
         # 如果是新建文章且没有设置作者，则设置为当前登录用户
         if not change and not obj.author:
             obj.author = request.user
-        super(ArticlelAdmin, self).save_model(request, obj, form, change)
+        super(ArticleAdmin, self).save_model(request, obj, form, change)
 
     def get_view_on_site_url(self, obj=None):
         """
