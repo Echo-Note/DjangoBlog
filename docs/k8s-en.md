@@ -124,7 +124,7 @@ kubectl get pods -n djangoblog | grep djangoblog
 # Exec into one of the Pods (replace [pod-name] with the name from the previous step)
 kubectl exec -it [pod-name] -n djangoblog -- bash
 
-# Inside the Pod, run the following commands:
+# Inside the Pod, run the following Commands:
 # Create a superuser account (follow the prompts)
 python manage.py createsuperuser
 
@@ -138,4 +138,4 @@ python manage.py rebuild_index
 exit
 ```
 
-Congratulations! You have successfully deployed DjangoBlog on your Kubernetes cluster. 
+Congratulations! You have successfully deployed DjangoBlog on your Kubernetes cluster.

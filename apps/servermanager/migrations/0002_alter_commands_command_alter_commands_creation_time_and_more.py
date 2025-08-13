@@ -10,35 +10,35 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="commands",
+            model_name="Commands",
             name="command",
             field=models.CharField(
                 db_comment="命令内容/脚本", max_length=2000, verbose_name="命令"
             ),
         ),
         migrations.AlterField(
-            model_name="commands",
+            model_name="Commands",
             name="creation_time",
             field=models.DateTimeField(
                 auto_now_add=True, db_comment="创建时间", verbose_name="创建时间"
             ),
         ),
         migrations.AlterField(
-            model_name="commands",
+            model_name="Commands",
             name="describe",
             field=models.CharField(
                 db_comment="命令用途或备注说明", max_length=300, verbose_name="命令描述"
             ),
         ),
         migrations.AlterField(
-            model_name="commands",
+            model_name="Commands",
             name="last_modify_time",
             field=models.DateTimeField(
                 auto_now=True, db_comment="最后修改时间", verbose_name="修改时间"
             ),
         ),
         migrations.AlterField(
-            model_name="commands",
+            model_name="Commands",
             name="title",
             field=models.CharField(
                 db_comment="命令的简短标题", max_length=300, verbose_name="命令标题"

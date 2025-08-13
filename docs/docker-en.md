@@ -48,7 +48,7 @@ After the containers start for the first time, you'll need to execute some initi
 # Get a shell inside the djangoblog application container (named 'web')
 docker-compose exec web bash
 
-# Inside the container, run the following commands:
+# Inside the container, run the following Commands:
 # Create a superuser account (follow the prompts to set username, email, and password)
 python manage.py createsuperuser
 
@@ -111,4 +111,4 @@ Most of the project's configuration is managed through environment variables. Yo
 
 ---
 
-After deployment, please review and adjust these environment variables according to your needs, especially `DJANGO_SECRET_KEY` and the database and email settings. 
+After deployment, please review and adjust these environment variables according to your needs, especially `DJANGO_SECRET_KEY` and the database and email settings.

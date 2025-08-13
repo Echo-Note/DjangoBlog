@@ -5,7 +5,7 @@ from werobot.messages.messages import TextMessage
 from apps.accounts.models import BlogUser
 from apps.blog.models import Article, Category
 
-from .models import commands
+from .models import Commands
 from .robot import CommandHandler, MessageHandler, category, recents, search
 
 
@@ -48,7 +48,7 @@ class ServerManagerTest(TestCase):
         rsp = recents(None, None)
         self.assertTrue(rsp != "暂时还没有文章")
 
-        cmd = commands()
+        cmd = Commands()
         cmd.title = "test"
         cmd.command = "ls"
         cmd.describe = "test"

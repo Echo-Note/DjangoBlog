@@ -2,7 +2,7 @@ from django.db import models
 
 
 # Create your models here.
-class commands(models.Model):
+class Commands(models.Model):
     """服务器命令模板。"""
 
     title = models.CharField("命令标题", max_length=300, db_comment="命令的简短标题")
