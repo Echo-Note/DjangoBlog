@@ -108,15 +108,14 @@ WSGI_APPLICATION = 'djangoblog.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DJANGO_MYSQL_DATABASE') or 'djangoblog',
-        'USER': os.environ.get('DJANGO_MYSQL_USER') or 'root',
-        'PASSWORD': os.environ.get('DJANGO_MYSQL_PASSWORD') or 'root',
-        'HOST': os.environ.get('DJANGO_MYSQL_HOST') or '127.0.0.1',
-        'PORT': int(
-            os.environ.get('DJANGO_MYSQL_PORT') or 3306),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DJANGO_POSTGRESQL_DATABASE') or 'djangoblog',
+        'USER': os.environ.get('DJANGO_POSTGRESQL_USER') or 'echonote',
+        'PASSWORD': os.environ.get('DJANGO_POSTGRESQL_PASSWORD') or 'password',
+        'HOST': os.environ.get('DJANGO_POSTGRESQL_HOST') or '127.0.0.1',
+        'PORT': int(os.environ.get('DJANGO_POSTGRESQL_PORT') or 5432),
         'OPTIONS': {
-            'charset': 'utf8mb4'},
+            'options': '-c search_path=public,contenttypes'},
     }}
 
 # Password validation
