@@ -37,6 +37,20 @@ class RegisterView(FormView):
 
     @method_decorator(csrf_protect)
     def dispatch(self, *args, **kwargs):
+        """
+        重写dispatch方法以向视图添加CSRF保护。
+
+        此方法使用 “csrf_protect” 进行修饰，以确保视图不受
+        跨站点请求伪造 (CSRF) 攻击。然后调用父类的调度方法
+        继续正常的视图调度过程。
+
+        Args:
+            *args: 可变长度参数列表。
+            **kwargs: 任意关键字参数。
+
+        Returns:
+            HttpResponse: 父类的调度方法生成的响应。
+        """
         return super(RegisterView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):

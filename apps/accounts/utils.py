@@ -37,6 +37,7 @@ def verify(email: str, code: str) -> typing.Optional[str]:
     cache_code = get_code(email)
     if cache_code != code:
         return gettext("Verification code error")
+    return None
 
 
 def set_code(email: str, code: str):

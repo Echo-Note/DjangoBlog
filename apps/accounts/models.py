@@ -15,6 +15,7 @@ class BlogUser(AbstractUser):
     source = models.CharField(_('create source'), max_length=100, blank=True)
 
     def get_absolute_url(self):
+        """获取用户详细信息视图的url。"""
         return reverse(
             'blog:author_detail', kwargs={
                 'author_name': self.username})
@@ -23,6 +24,11 @@ class BlogUser(AbstractUser):
         return self.email
 
     def get_full_url(self):
+        """
+        获取用户详细信息页面的完整URL。
+
+        :return: URL字符串。
+        """
         site = get_current_site().domain
         url = "https://{site}{path}".format(site=site,
                                             path=self.get_absolute_url())

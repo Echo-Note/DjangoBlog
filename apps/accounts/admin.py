@@ -17,7 +17,11 @@ class BlogUserCreationForm(forms.ModelForm):
         fields = ('email',)
 
     def clean_password2(self):
-        # Check that the two password entries match
+        """
+        验证输入到两个密码字段中的值是否匹配。
+        请注意，仅当两个字段不为空时才会引发错误。
+        如果任一字段为空，则验证成功。
+        """
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -25,7 +29,10 @@ class BlogUserCreationForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        # Save the provided password in hashed format
+        """
+        保存用户对象，使用提供的password1的值设置raw_password。
+        如果commit=True，则将更改保存到数据库。
+        """
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
@@ -35,7 +42,11 @@ class BlogUserCreationForm(forms.ModelForm):
 
 
 class BlogUserChangeForm(UserChangeForm):
+
     class Meta:
+        """
+        指定模型和字段
+        """
         model = BlogUser
         fields = '__all__'
         field_classes = {'username': UsernameField}
