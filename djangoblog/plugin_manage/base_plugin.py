@@ -11,7 +11,9 @@ class BasePlugin:
 
     def __init__(self):
         if not all([self.PLUGIN_NAME, self.PLUGIN_DESCRIPTION, self.PLUGIN_VERSION]):
-            raise ValueError("Plugin metadata (PLUGIN_NAME, PLUGIN_DESCRIPTION, PLUGIN_VERSION) must be defined.")
+            raise ValueError(
+                "Plugin metadata (PLUGIN_NAME, PLUGIN_DESCRIPTION, PLUGIN_VERSION) must be defined."
+            )
         self.init_plugin()
         self.register_hooks()
 
@@ -20,7 +22,7 @@ class BasePlugin:
         插件初始化逻辑
         子类可以重写此方法来实现特定的初始化操作
         """
-        logger.info(f'{self.PLUGIN_NAME} initialized.')
+        logger.info(f"{self.PLUGIN_NAME} initialized.")
 
     def register_hooks(self):
         """
@@ -35,7 +37,7 @@ class BasePlugin:
         :return: 包含插件元数据的字典
         """
         return {
-            'name': self.PLUGIN_NAME,
-            'description': self.PLUGIN_DESCRIPTION,
-            'version': self.PLUGIN_VERSION
+            "name": self.PLUGIN_NAME,
+            "description": self.PLUGIN_DESCRIPTION,
+            "version": self.PLUGIN_VERSION,
         }

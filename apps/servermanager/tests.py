@@ -1,5 +1,5 @@
 from django.test import Client, RequestFactory, TestCase
-from servermanager.api.commonapi import ChatGPT
+from apps.servermanager.api.commonapi import ChatGPT
 from werobot.messages.messages import TextMessage
 
 from apps.accounts.models import BlogUser

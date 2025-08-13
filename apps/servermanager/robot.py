@@ -1,8 +1,9 @@
 import logging
 import os
 import re
+import json
+from typing import Dict, Any
 
-import jsonpickle
 from django.conf import settings
 from werobot import WeRoBot
 from werobot.replies import Article, ArticlesReply
@@ -32,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 def convert_to_article_reply(articles, message):
     reply = ArticlesReply(message=message)
-    from blog.templatetags.blog_tags import truncatechars_content
+    from apps.blog.templatetags.blog_tags import truncatechars_content
 
     for post in articles:
         imgs = re.findall(r"(?:http\:|https\:)?\/\/.*\.(?:png|jpg)", post.body)
@@ -117,18 +118,66 @@ def echo(message, session):
     return handler.handler()
 
 
+class WxUserInfo:
+    """微信用户信息类 - 使用安全的序列化方式"""
+
+    def __init__(self):
+        self.isAdmin: bool = False
+        self.isPasswordSet: bool = False
+        self.Count: int = 0
+        self.Command: str = ""
+
+    def to_dict(self) -> Dict[str, Any]:
+        """安全地将对象转换为字典"""
+        return {
+            "isAdmin": bool(self.isAdmin),
+            "isPasswordSet": bool(self.isPasswordSet),
+            "Count": int(self.Count),
+            "Command": str(self.Command),
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "WxUserInfo":
+        """安全地从字典创建对象，包含数据验证"""
+        instance = cls()
+
+        # 验证和设置数据，确保类型安全
+        if isinstance(data.get("isAdmin"), bool):
+            instance.isAdmin = data["isAdmin"]
+
+        if isinstance(data.get("isPasswordSet"), bool):
+            instance.isPasswordSet = data["isPasswordSet"]
+
+        if isinstance(data.get("Count"), int) and 0 <= data["Count"] <= 10:
+            instance.Count = data["Count"]
+
+        if isinstance(data.get("Command"), str) and len(data["Command"]) <= 1000:
+            instance.Command = data["Command"]
+
+        return instance
+
+
 class MessageHandler:
     def __init__(self, message, session):
         userid = message.source
         self.message = message
         self.session = session
         self.userid = userid
+
         try:
-            info = session[userid]
-            self.userinfo = jsonpickle.decode(info)
-        except Exception:
-            userinfo = WxUserInfo()
-            self.userinfo = userinfo
+            # 安全的反序列化：使用JSON而不是pickle
+            info_str = session.get(userid)
+            if info_str:
+                info_dict = json.loads(info_str)
+                self.userinfo = WxUserInfo.from_dict(info_dict)
+            else:
+                self.userinfo = WxUserInfo()
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError) as e:
+            # 记录错误但不暴露敏感信息
+            logger.warning(
+                f"Failed to deserialize user session data: {type(e).__name__}"
+            )
+            self.userinfo = WxUserInfo()
 
     @property
     def is_admin(self):
@@ -139,8 +188,14 @@ class MessageHandler:
         return self.userinfo.isPasswordSet
 
     def save_session(self):
-        info = jsonpickle.encode(self.userinfo)
-        self.session[self.userid] = info
+        """安全地保存会话数据"""
+        try:
+            # 使用安全的JSON序列化
+            info_dict = self.userinfo.to_dict()
+            info_str = json.dumps(info_dict, ensure_ascii=False)
+            self.session[self.userid] = info_str
+        except (TypeError, ValueError) as e:
+            logger.error(f"Failed to serialize user session data: {type(e).__name__}")
 
     def handler(self):
         info = self.message.content
@@ -180,11 +235,3 @@ class MessageHandler:
                 return "确认执行: " + info + " 命令?"
 
         return ChatGPT.chat(info)
-
-
-class WxUserInfo:
-    def __init__(self):
-        self.isAdmin = False
-        self.isPasswordSet = False
-        self.Count = 0
-        self.Command = ""
