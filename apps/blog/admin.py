@@ -122,6 +122,7 @@ class ArticlelAdmin(admin.ModelAdmin):
         close_article_commentstatus,
         open_article_commentstatus,
     ]
+    readonly_fields = ("views", "creation_time", "last_modify_time")
 
     def link_to_category(self, obj):
         """
